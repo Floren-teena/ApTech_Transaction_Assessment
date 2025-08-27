@@ -8,13 +8,13 @@ namespace TransactionAssessment.Controllers
     public class TransactionsController : Controller
     {
         private readonly ITransactionRepository _transactionRepository;
-        //private readonly ILogger<TransactionsController> _logger;
+        private readonly ILogger<TransactionsController> _logger;
         private readonly IMapper _mapper;
 
         public TransactionsController(ITransactionRepository transactionRepository, ILogger<TransactionsController> logger, IMapper mapper)
         {
             _transactionRepository = transactionRepository;
-            //_logger = logger;
+            _logger = logger;
             _mapper = mapper;
         }
 
@@ -47,14 +47,14 @@ namespace TransactionAssessment.Controllers
         {
             if (!ModelState.IsValid)
             {
-                //_logger.LogWarning("Create transaction failed due to model validation errors.");
+                _logger.LogWarning("Create transaction failed due to model validation errors.");
                 return BadRequest(new { success = false, errors = ModelState });
             }
 
             var transaction = _mapper.Map<Transaction>(model);
             await _transactionRepository.AddAsync(transaction);
 
-            //_logger.LogInformation("New transaction created successfully with ID {TransactionId}.", transaction.TransactionId);
+            _logger.LogInformation("New transaction created successfully with ID {TransactionId}.", transaction.TransactionId);
             return Ok(new { success = true, message = "Transaction created successfully", id = transaction.TransactionId });
         }
 
@@ -64,21 +64,21 @@ namespace TransactionAssessment.Controllers
         {
             if (!ModelState.IsValid)
             {
-               // _logger.LogWarning("Edit transaction for ID {TransactionId} failed due to model validation errors.", id);
+                _logger.LogWarning("Edit transaction for ID {TransactionId} failed due to model validation errors.", id);
                 return BadRequest(new { success = false, errors = ModelState });
             }
 
             var transaction = await _transactionRepository.GetByIdAsync(id);
             if (transaction == null)
             {
-                //_logger.LogWarning("Edit failed: Transaction with ID {TransactionId} not found.", id);
+                _logger.LogWarning("Edit failed: Transaction with ID {TransactionId} not found.", id);
                 return NotFound();
             }
 
             _mapper.Map(model, transaction);
             await _transactionRepository.UpdateAsync(transaction);
 
-           // _logger.LogInformation("Transaction with ID {TransactionId} was updated successfully.", id);
+            _logger.LogInformation("Transaction with ID {TransactionId} was updated successfully.", id);
             return Ok(new { success = true, message = "Transaction updated successfully" });
         }
 
@@ -91,18 +91,18 @@ namespace TransactionAssessment.Controllers
                 var transaction = await _transactionRepository.GetByIdAsync(id);
                 if (transaction == null)
                 {
-                    //_logger.LogWarning("Delete failed: Transaction with ID {TransactionId} not found.", id);
+                    _logger.LogWarning("Delete failed: Transaction with ID {TransactionId} not found.", id);
                     return NotFound();
                 }
 
                 await _transactionRepository.DeleteAsync(id);
 
-                //_logger.LogInformation("Transaction with ID {TransactionId} was deleted successfully.", id);
+                _logger.LogInformation("Transaction with ID {TransactionId} was deleted successfully.", id);
                 return Ok(new { success = true, message = "Transaction deleted successfully" });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //_logger.LogError(ex, "An unexpected error occurred while deleting transaction with ID {TransactionId}.", id);
+                _logger.LogError(ex, "An unexpected error occurred while deleting transaction with ID {TransactionId}.", id);
                 return StatusCode(500, "An internal server error occurred. Please try again later.");
             }
         }
