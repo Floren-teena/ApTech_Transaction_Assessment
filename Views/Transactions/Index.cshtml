@@ -6,12 +6,12 @@
     <div id="notification-placeholder"></div>
     <h2>Transactions Management</h2>
 
-    <!-- Add New Transaction Button -->
+    <!-- New Transaction Button -->
     <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#transactionModal" onclick="clearForm()">
         Add New Transaction
     </button>
 
-    <!-- ===== NEW: Filter Section ===== -->
+    <!----- Filter Section ----->
     <div class="card mb-3">
         <div class="card-body">
             <h5 class="card-title">Filter Transactions</h5>
@@ -38,7 +38,8 @@
             </div>
         </div>
     </div>
-    <!-- ===== End of Filter Section ===== -->
+    <!----- End of Filter Section ----->
+
     <!-- Transactions Table -->
     <div class="table-responsive">
         <table id="transactionsTable" class="table table-striped table-bordered">
@@ -60,7 +61,6 @@
     </div>
 </div>
 
-<!-- (Your Modals for Add/Edit and Delete remain unchanged here) -->
 <!-- Transaction Modal -->
 <div class="modal fade" id="transactionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
@@ -138,21 +138,17 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            // Initial load of all transactions
             loadTransactions();
 
-            // Form submission for Add/Edit
             $('#transactionForm').on('submit', function(e) {
                 e.preventDefault();
                 saveTransaction();
             });
 
-            // Delete confirmation
             $('#confirmDelete').on('click', function() {
                 deleteTransaction();
             });
 
-            // ===== NEW: Event Listeners for Filters =====
             $('#filterBtn').on('click', function() {
                 applyFilters();
             });
@@ -162,8 +158,7 @@
             });
         });
 
-        // REFACTORED: This function now just populates the table, making it reusable
-                function populateTable(data) {
+            function populateTable(data) {
             var tableBody = $('#transactionsTable tbody');
             tableBody.empty();
 
@@ -194,7 +189,6 @@
             });
         }
 
-        // UPDATED: This now uses the populateTable function
         function loadTransactions() {
             $.ajax({
                 url: '/Transactions/GetAll',
@@ -208,7 +202,6 @@
             });
         }
 
-        // ===== NEW: Function to apply filters =====
         function applyFilters() {
             var bankName = $('#bankNameFilter').val().trim();
             var minAmount = $('#minAmountFilter').val();
@@ -229,7 +222,6 @@
             }
             // Otherwise, use amount range if either min or max is specified
             else if (minAmount || maxAmount) {
-                // Default min to 0 and max to a very large number if one is not provided
                 var min = minAmount || 0;
                 var max = maxAmount || 999999999;
 
@@ -244,22 +236,17 @@
                     }
                 });
             }
-            // If no filters are entered, just show all transactions
             else {
                 loadTransactions();
             }
         }
 
-        // ===== NEW: Function to clear filters and reload all data =====
         function clearFilters() {
             $('#bankNameFilter').val('');
             $('#minAmountFilter').val('');
             $('#maxAmountFilter').val('');
             loadTransactions();
         }
-
-
-        // (Your other functions like saveTransaction, editTransaction, etc. remain unchanged)
 
         function clearForm() {
             $('#transactionForm')[0].reset();
@@ -298,7 +285,7 @@
                 success: function(response) {
                     if (response.success) {
                         $('#transactionModal').modal('hide');
-                        clearFilters(); // Clear filters and reload all to show the new/updated data
+                        clearFilters(); 
                         showAlert('success', response.message);
                     }
                 },
@@ -369,7 +356,7 @@
                 success: function(response) {
                     if (response.success) {
                         $('#deleteModal').modal('hide');
-                        clearFilters(); // Clear filters and reload all to ensure the deleted item is gone
+                        clearFilters(); 
                         showAlert('success', response.message);
                     }
                 },

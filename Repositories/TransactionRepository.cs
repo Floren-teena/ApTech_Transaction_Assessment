@@ -28,11 +28,8 @@ namespace TransactionAssessment.Repositories
                 return new List<Transaction>();
             }
 
-            // Convert the search term to lower case once
             var lowerCaseBankName = bankName.Trim().ToLower();
-
             return await _context.Transactions
-                // Apply ToLower() to the database column and use Contains() for partial matching
                 .Where(t => t.BankName != null && t.BankName.ToLower().Contains(lowerCaseBankName))
                 .ToListAsync();
         }

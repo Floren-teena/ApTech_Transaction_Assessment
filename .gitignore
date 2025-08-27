@@ -40,7 +40,6 @@ TestResults/
 *.trx
 
 # Ignore publish outputs
-wwwroot/
 publish/
 out/
 dist/
