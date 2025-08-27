@@ -18,13 +18,11 @@ namespace TransactionAssessment.Controllers
             _mapper = mapper;
         }
 
-        // GET: Transactions
         public IActionResult Index()
         {
             return View();
         }
 
-        // GET: Transactions/GetAll
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -32,7 +30,6 @@ namespace TransactionAssessment.Controllers
             return Ok(transactions);
         }
 
-        // GET: Transactions/Get/5
         [HttpGet]
         public async Task<IActionResult> Get(Guid id)
         {
@@ -44,7 +41,6 @@ namespace TransactionAssessment.Controllers
             return Ok(transaction);
         }
 
-        // POST: Transactions/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([FromBody] TransactionViewModel model)
@@ -56,22 +52,12 @@ namespace TransactionAssessment.Controllers
             }
 
             var transaction = _mapper.Map<Transaction>(model);
-            //var transaction = new Transaction
-            //{
-            //    AccountNumber = model.AccountNumber,
-            //    BeneficiaryName = model.BeneficiaryName,
-            //    BankName = model.BankName,
-            //    SWIFTCode = model.SWIFTCode,
-            //    Amount = model.Amount
-            //};
-
             await _transactionRepository.AddAsync(transaction);
 
             //_logger.LogInformation("New transaction created successfully with ID {TransactionId}.", transaction.TransactionId);
             return Ok(new { success = true, message = "Transaction created successfully", id = transaction.TransactionId });
         }
 
-        // PUT: Transactions/Edit/5
         [HttpPut]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [FromBody] TransactionViewModel model)
@@ -90,20 +76,12 @@ namespace TransactionAssessment.Controllers
             }
 
             _mapper.Map(model, transaction);
-
-            //transaction.AccountNumber = model.AccountNumber;
-            //transaction.BeneficiaryName = model.BeneficiaryName;
-            //transaction.BankName = model.BankName;
-            //transaction.SWIFTCode = model.SWIFTCode;
-            //transaction.Amount = model.Amount;
-
             await _transactionRepository.UpdateAsync(transaction);
 
            // _logger.LogInformation("Transaction with ID {TransactionId} was updated successfully.", id);
             return Ok(new { success = true, message = "Transaction updated successfully" });
         }
 
-        // DELETE: Transactions/Delete/5
         [HttpDelete]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Guid id)
@@ -129,7 +107,6 @@ namespace TransactionAssessment.Controllers
             }
         }
 
-        // Additional endpoints to demonstrate repository benefits
         [HttpGet]
         public async Task<IActionResult> GetByAmountRange(int min, int max)
         {
